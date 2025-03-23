@@ -49,8 +49,11 @@ const GenerateText = () => {
       >
         {loading ? "Generating..." : "Generate Content"}
       </button>
+
       <h2>Generated Content:</h2>
-      <p>{generatedText || "No content generated yet."}</p>
+      <pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+        {generatedText || "No content generated yet."}
+      </pre>
     </div>
   );
 };

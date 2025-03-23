@@ -7,14 +7,28 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const token = localStorage.getItem("token"); // Check for token in localStorage
+  //const token = localStorage.getItem("token"); // Check for token in localStorage
+
+  const expirationTime = new Date().getTime() + 15 * 60 * 1000; // 15 minutes from now
 
   // Redirect to dashboard if the user is already logged in
   useEffect(() => {
-    if (token) {
-      navigate("/dashboard"); // Redirect if a token is found
+    const token = localStorage.getItem("token");
+    const expiryTime = localStorage.getItem("token_expiry");
+
+    if (token && expiryTime) {
+      const now = new Date().getTime();
+
+      if (now > expiryTime) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("token_expiry");
+        localStorage.removeItem("username");
+        navigate("/login"); // Redirect if token expired
+      } else {
+        navigate("/dashboard"); // Redirect if valid
+      }
     }
-  }, [token, navigate]);
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,9 +40,10 @@ const Login = () => {
           password,
         }
       );
-      console.log(response);
+      //console.log(response);
       localStorage.setItem("token", response.data.token); // Save JWT to localStorage
       localStorage.setItem("username", username); // Save username to localStorage
+      localStorage.setItem("token_expiry", expirationTime); // Save expiry time
 
       navigate("/dashboard"); // Use navigate to redirect to the dashboard page
     } catch (err) {

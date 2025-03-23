@@ -12,6 +12,7 @@ const Header = () => {
     // Remove token and username from localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+    localStorage.removeItem("token_expiry");
 
     // Redirect to Login page
     navigate("/login");
